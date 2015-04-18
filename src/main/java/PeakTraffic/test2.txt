@@ -1,0 +1,12 @@
+Sun Jan 18 13:51:42 UTC 2015	a@example.com	b@example.com
+Sun Jan 18 13:51:44 UTC 2015	b@example.com	a@example.com
+Sun Jan 18 13:51:45 UTC 2015	a@example.com	c@example.com
+Sun Jan 18 13:51:46 UTC 2015	c@example.com	a@example.com
+Sun Jan 18 13:51:47 UTC 2015	b@example.com	c@example.com
+Sun Jan 18 13:51:48 UTC 2015	c@example.com	b@example.com
+Sun Jan 18 13:51:49 UTC 2015	d@example.com	e@example.com
+Sun Jan 18 13:51:51 UTC 2015	e@example.com	d@example.com
+Sun Jan 18 13:51:52 UTC 2015	d@example.com	f@example.com
+Sun Jan 18 13:51:53 UTC 2015	f@example.com	d@example.com
+Sun Jan 18 13:51:54 UTC 2015	e@example.com	f@example.com
+Sun Jan 18 13:51:56 UTC 2015	f@example.com	e@example.com

@@ -69,6 +69,19 @@ public class Main {
         }
     }
 
+    public class Solution {
+        public int titleToNumber(String A) {
+            int number = 0;
+            for (int i = A.length()-1, j = 0;i>=0;--i,++j) {
+                int z = A.charAt(i)-'A';
+                int val = z * (int)Math.pow(26,j);
+                number += val;
+            }
+
+            return number;
+        }
+    }
+
     public static void main(String args[]) {
         Main main = new Main();
         main.readFile(args[0]);

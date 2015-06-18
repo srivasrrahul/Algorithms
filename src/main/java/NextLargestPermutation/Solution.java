@@ -34,9 +34,9 @@ class Pair {
 public class Solution {
 
 
-    public Pair nextPermutation(ArrayList<Integer> A,int index) {
-        if (index == A.size()-1) {
-            return new Pair(A.get(index-1),A.get(index-1));
+    public Pair nextPermutation(ArrayList<Integer> A) {
+        for (int i = A.size()-1;i>=0;--i) {
+
         }
 
 

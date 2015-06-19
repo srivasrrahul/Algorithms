@@ -1,6 +1,76 @@
 package GeometricAlgo;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+
+class IntervalPoint implements Comparable<IntervalPoint> {
+    private int p;
+
+    public IntervalPoint(int p) {
+        this.p = p;
+    }
+
+    public int getP() {
+        return p;
+    }
+
+    public void setP(int p) {
+        this.p = p;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        IntervalPoint that = (IntervalPoint) o;
+
+        if (p != that.p) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return p;
+    }
+
+
+
+    @Override
+    public int compareTo(IntervalPoint o) {
+        return Integer.compare(p,o.getP());
+    }
+}
+
+
+class Interval {
+    private IntervalPoint low;
+    private IntervalPoint high;
+
+    public Interval(IntervalPoint low, IntervalPoint high) {
+        this.low = low;
+        this.high = high;
+    }
+
+    public IntervalPoint getLow() {
+        return low;
+    }
+
+    public void setLow(IntervalPoint low) {
+        this.low = low;
+    }
+
+    public IntervalPoint getHigh() {
+        return high;
+    }
+
+    public void setHigh(IntervalPoint high) {
+        this.high = high;
+    }
+}
 
 class Point {
     private double x;
@@ -116,6 +186,18 @@ public class GeometricAlgos {
 
     }
 
+    static  void testOpenedInterval() {
+        ArrayList<Interval> intervals = new ArrayList<>();
+        intervals.add(new Interval(new IntervalPoint(9),new IntervalPoint(17)));
+        intervals.add(new Interval(new IntervalPoint(12),new IntervalPoint(22)));
+        intervals.add(new Interval(new IntervalPoint(13),new IntervalPoint(14)));
+        intervals.add(new Interval(new IntervalPoint(10),new IntervalPoint(15)));
+
+        int [] maxInterval = findMaxInterval(intervals);
+        System.out.println(maxInterval[0]);
+        System.out.println(maxInterval[1]);
+
+    }
     public static void main(String[] args) {
         Point p1 = new Point(0,0);
 
@@ -132,7 +214,7 @@ public class GeometricAlgos {
         Line l2 = new Line(p3,p4);
 
         GeometricAlgos geometricAlgos = new GeometricAlgos();
-        System.out.println(geometricAlgos.isLineIntersect(l1, l2));
+        //System.out.println(geometricAlgos.isLineIntersect(l1, l2));
 
         ArrayList<Point> arrayList = new ArrayList<>();
         arrayList.add(new Point(-2,-2));
@@ -143,9 +225,57 @@ public class GeometricAlgos {
         arrayList.add(new Point(4,4));
         arrayList.add(new Point(-1,-1));
 
-        System.out.println(geometricAlgos.isCollinear(arrayList,0,arrayList.size()-1));
+        //System.out.println(geometricAlgos.isCollinear(arrayList,0,arrayList.size()-1));
+
+        testOpenedInterval();
 
     }
+
+
+    static int [] findMaxInterval(ArrayList<Interval> intervals) {
+        HashMap<IntervalPoint,Interval> intervalPointLowPoint = new HashMap<>();
+        HashMap<IntervalPoint,Interval> intervalPointHighPoint = new HashMap<>();
+        ArrayList<IntervalPoint> intervalPointArrayList = new ArrayList<>();
+        for (Interval interval : intervals) {
+            intervalPointLowPoint.put(interval.getLow(),interval);
+            intervalPointHighPoint.put(interval.getHigh(),interval);
+            intervalPointArrayList.add(interval.getLow());
+            intervalPointArrayList.add(interval.getHigh());
+        }
+
+        Collections.sort(intervalPointArrayList);
+
+        int maxIntervalSize = 0;
+        int [] maxInterval = new int[2];
+        int lastOpenedPoint = 0;
+
+        HashSet<IntervalPoint> openedIntervals = new HashSet<>();
+        for (IntervalPoint intervalPoint : intervalPointArrayList) {
+            if (intervalPointLowPoint.containsKey(intervalPoint)) {
+                //An interval is opened update last opened point
+                openedIntervals.add(intervalPoint);
+                lastOpenedPoint = intervalPoint.getP();
+            }else {
+                //An interval is closed
+                int overlapIntervalSize = openedIntervals.size();
+                if (overlapIntervalSize > maxIntervalSize) {
+                    maxIntervalSize = overlapIntervalSize;
+                    maxInterval[0] = lastOpenedPoint;
+                    maxInterval[1] = intervalPoint.getP();
+
+                }
+
+                openedIntervals.remove(intervalPoint);
+
+
+
+            }
+        }
+
+
+        return maxInterval;
+    }
+
 
 
 

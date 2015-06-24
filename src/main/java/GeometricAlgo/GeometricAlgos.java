@@ -1,9 +1,6 @@
 package GeometricAlgo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 class IntervalPoint implements Comparable<IntervalPoint> {
     private int p;
@@ -127,8 +124,48 @@ class Line {
         this.p2 = p2;
     }
 }
+
+class PolarAngleComparator implements Comparator<Point> {
+
+    private Point origin;
+    PolarAngleComparator(Point origin) {
+        this.origin = origin;
+    }
+
+    @Override
+    public int compare(Point o1, Point o2) {
+        GeometricAlgos geometricAlgos = new GeometricAlgos();
+
+        //origin,o1,o2 > 0 then o1 is on left side of o2 wrt origin
+        double val =  geometricAlgos.consecutiveLineSegementsTurningAngle(origin,o1,o2);
+        if (val < 0) {
+            return 1;
+        }else {
+            if (val > 0) {
+                return -1;
+            }else {
+                return 0;
+            }
+        }
+    }
+}
+
 public class GeometricAlgos {
-    double ccw(Point a ,Point b,Point c) {
+
+    boolean isOnRight(Point p1,Point p2) {
+        double val=  p1.getX()*p2.getY() - p1.getY()*p2.getX() ;
+        //System.out.println(val);
+        return val > 0;
+    }
+
+    double consecutiveLineSegementsTurningAngle(Point p0,Point p1,Point p2) {
+        //(p1-p0)*(p2-p0) > 0 p1 is clockwise and angle is positive
+        //
+        return (p1.getX() - p0.getX())*(p2.getY()-p0.getY())-(p2.getX()-p0.getX())*(p1.getY()-p0.getY());
+    }
+
+
+    static double ccw(Point a ,Point b,Point c) {
         double val = (b.getX()-c.getX())*(c.getY()-a.getY())-(b.getX()-a.getY())*(c.getX()-a.getX());
         return val;
     }
@@ -186,6 +223,35 @@ public class GeometricAlgos {
 
     }
 
+    static double distance(Point p1,Point p2) {
+        double xDistance = p1.getX() - p2.getX();
+        double yDistance = p1.getY() - p2.getY();
+        return Math.sqrt(xDistance*xDistance+ yDistance*yDistance);
+    }
+
+    static double distanceFromPointToLine(Point a,Point p1,Point p2) {
+        double numerator = (a.getX()-p1.getX())*(p2.getX()-p1.getX()) +
+                (a.getY() - p1.getY()) * (p2.getY() - p1.getY());
+
+        double denominator = distance(p1,p2);
+
+        return numerator/denominator;
+    }
+
+
+    //Check if p0 intersects with p1 and p2
+    static boolean rightHorizontolRayIntersect(Point p0,Point p1,Point p2) {
+        if (p0.getY() >= p1.getY() && p0.getY() <= p2.getY()) {
+            return true;
+        }
+
+        if (p0.getY() >= p2.getY() && p0.getY() <= p1.getY()) {
+            return true;
+        }
+
+        return false;
+    }
+
     static  void testOpenedInterval() {
         ArrayList<Interval> intervals = new ArrayList<>();
         intervals.add(new Interval(new IntervalPoint(9),new IntervalPoint(17)));
@@ -197,6 +263,33 @@ public class GeometricAlgos {
         System.out.println(maxInterval[0]);
         System.out.println(maxInterval[1]);
 
+    }
+
+    static void testOnRight() {
+        GeometricAlgos geometricAlgos = new GeometricAlgos();
+        System.out.println(geometricAlgos.isOnRight(new Point(1, 0), new Point(1, 1)));
+    }
+
+    static void testDistanceFromPointToLine() {
+        System.out.println(distanceFromPointToLine(new Point(0, 0), new Point(1, 1), new Point(1, 0)));
+    }
+
+    static void testPolarAngles() {
+        ArrayList<Point> points = new ArrayList<>();
+        points.add(new Point(0,1));
+        points.add(new Point(1,1));
+        points.add(new Point(1,0));
+        points.add(new Point(-1,1));
+
+        Collections.sort(points,new PolarAngleComparator(new Point(0,0)));
+
+        for (Point point : points) {
+            System.out.println(point.getX() + "," + point.getY());
+        }
+    }
+
+    static void testRightRayIntersect() {
+        System.out.println(rightHorizontolRayIntersect(new Point(1, 1), new Point(0, 2), new Point(2, 0)));
     }
     public static void main(String[] args) {
         Point p1 = new Point(0,0);
@@ -227,7 +320,13 @@ public class GeometricAlgos {
 
         //System.out.println(geometricAlgos.isCollinear(arrayList,0,arrayList.size()-1));
 
-        testOpenedInterval();
+        //testOpenedInterval();
+        //testOnRight();
+
+        //testPolarAngles();
+        //testRightRayIntersect();
+
+        testDistanceFromPointToLine();
 
     }
 

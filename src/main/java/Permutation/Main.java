@@ -12,7 +12,7 @@ import java.util.List;
 public class Main {
     List<String> permute(String x) {
        if (x.length() == 1) {
-           return new LinkedList<String>(Arrays.asList(x));
+           return new LinkedList<>(Arrays.asList(x));
        }
 
 

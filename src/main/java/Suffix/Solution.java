@@ -17,7 +17,7 @@ public class Solution {
         return suffixes;
     }
 
-    String[] suffixSort(String string) {
+    public String[] suffixSort(String string) {
         String [] suffixes = getSuffix(string);
         Arrays.sort(suffixes);
 

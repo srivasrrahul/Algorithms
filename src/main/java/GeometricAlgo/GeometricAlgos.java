@@ -1,5 +1,6 @@
 package GeometricAlgo;
 
+import java.io.*;
 import java.util.*;
 
 class IntervalPoint implements Comparable<IntervalPoint> {
@@ -93,6 +94,14 @@ class Point {
     public void setY(double y) {
         this.y = y;
     }
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }
 
 class Line {
@@ -122,6 +131,66 @@ class Line {
 
     public void setP2(Point p2) {
         this.p2 = p2;
+    }
+}
+
+class YCoordinateBasedOrder implements Comparator<Point> {
+
+
+    @Override
+    public int compare(Point o1, Point o2) {
+        return Double.compare(o1.getY(),o2.getY());
+    }
+}
+
+class GrahamsScan {
+    private ArrayList<Point> pointsInPlane;
+
+    public GrahamsScan(ArrayList<Point> pointsInPlane) {
+        this.pointsInPlane = pointsInPlane;
+    }
+
+    Point getLowestPoint() {
+        Collections.sort(pointsInPlane,new YCoordinateBasedOrder());
+        return pointsInPlane.get(0);
+    }
+
+    void sortBasedOnPolarAngleComparator(Point origin) {
+        Collections.sort(pointsInPlane,new PolarAngleComparator(origin));
+    }
+
+    void printPoints() {
+        for (Point point : pointsInPlane) {
+            System.out.println(point);
+        }
+    }
+
+    void formConvexHull() {
+        //1. Sort the points based on y coordinate
+        Point lowestPoint = getLowestPoint();
+        //printPoints();
+        sortBasedOnPolarAngleComparator(lowestPoint);
+        System.out.println("====");
+        //printPoints();
+        Stack<Point> hull = new Stack<>();
+        hull.push(pointsInPlane.get(0));
+        hull.push(pointsInPlane.get(1));
+
+        for (int i = 2;i<pointsInPlane.size();++i) {
+            Point top = hull.pop();
+            while (GeometricAlgos.ccw(hull.peek(),top,pointsInPlane.get(i)) <= 0) {
+                top = hull.pop();
+            }
+
+            hull.push(top);
+            hull.push(pointsInPlane.get(i));
+        }
+
+        while (hull.size() > 0) {
+            System.out.println(hull.pop());
+        }
+
+
     }
 }
 
@@ -276,10 +345,11 @@ public class GeometricAlgos {
 
     static void testPolarAngles() {
         ArrayList<Point> points = new ArrayList<>();
-        points.add(new Point(0,1));
+        points.add(new Point(0,0));
+        points.add(new Point(1,-1));
+        points.add(new Point(1,2));
         points.add(new Point(1,1));
-        points.add(new Point(1,0));
-        points.add(new Point(-1,1));
+        points.add(new Point(0,3));
 
         Collections.sort(points,new PolarAngleComparator(new Point(0,0)));
 
@@ -288,8 +358,38 @@ public class GeometricAlgos {
         }
     }
 
+
+
+
     static void testRightRayIntersect() {
         System.out.println(rightHorizontolRayIntersect(new Point(1, 1), new Point(0, 2), new Point(2, 0)));
+    }
+
+    static void testGrahamsScan(String file) {
+        ArrayList<Point> points = new ArrayList<>();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            String line = bufferedReader.readLine();
+            int count = Integer.parseInt(line);
+            for (int i = 0;i<count;++i) {
+                line = bufferedReader.readLine();
+                String [] data = line.split(" ");
+                int a = Integer.parseInt(data[0]);
+                int b = Integer.parseInt(data[1]);
+                points.add(new Point(a,b));
+
+
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+        GrahamsScan grahamsScan = new GrahamsScan(points);
+        grahamsScan.formConvexHull();
     }
     public static void main(String[] args) {
         Point p1 = new Point(0,0);
@@ -326,7 +426,8 @@ public class GeometricAlgos {
         //testPolarAngles();
         //testRightRayIntersect();
 
-        testDistanceFromPointToLine();
+        //testDistanceFromPointToLine();
+        testGrahamsScan(args[0]);
 
     }
 

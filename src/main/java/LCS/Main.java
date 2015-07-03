@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 
 class CacheEntry {
     private int x;
@@ -57,27 +56,11 @@ class CacheEntry {
     }
 }
 
-class Cache {
-    private HashMap<CacheEntry,String> hashMap = new HashMap<>();
-    void updateEntry(CacheEntry cacheEntry,String l) {
-        hashMap.put(cacheEntry,l);
-    }
 
-    boolean isPresent(int x,int y) {
-        return hashMap.containsKey(new CacheEntry(x,y));
-    }
-
-    String getValue(int x,int y) {
-        return hashMap.get(new CacheEntry(x,y));
-    }
-
-
-
-}
 public class Main {
 
 
-    String lcs(String string1,String string2,int x,int y,Cache cache) {
+    public String lcs(String string1,String string2,int x,int y,Cache cache) {
         if (x == string1.length() || y== string2.length()) {
             return "";
         }

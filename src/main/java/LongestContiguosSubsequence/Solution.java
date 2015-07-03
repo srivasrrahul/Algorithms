@@ -1,6 +1,6 @@
 package LongestContiguosSubsequence;
 
-import java.util.TreeMap;
+import java.util.Arrays;
 
 class Result {
     private int i;
@@ -41,20 +41,31 @@ class Result {
 //Not optimal algorithm
 public class Solution {
     //HashMap should be changed to index
-    static int maxSum(int a[],
-                      int i,int maxLastLow,int maxLastHigh,int lastSum,TreeMap<Integer,Integer> sumFromPositiveBetweens) {
-
-        return 0;
+    static void scan(int a[],int maxSumEndingAtCurrent[],
+                      int i) {
 
 
+        if (i == a.length) {
+            return;
+        }
 
+        if (a[i] + maxSumEndingAtCurrent[i-1] > a[i]) {
+            maxSumEndingAtCurrent[i] = a[i] + maxSumEndingAtCurrent[i-1];
+        }else {
+            maxSumEndingAtCurrent[i] = a[i];
+        }
 
+        scan(a,maxSumEndingAtCurrent,i+1);
 
 
     }
 
     public static void main(String[] args) {
-        int a[] = new int[] {5,15,-30,10,-5,40,10};
+        int a[] = new int[] {5,15,-20,10,-5,40,10,-20,21};
+        int maxSumAtCurrent[] = new int[a.length];
+        maxSumAtCurrent[0] = a[0];
+        scan(a,maxSumAtCurrent,1);
+        System.out.println(Arrays.toString(maxSumAtCurrent));
 
 
     }

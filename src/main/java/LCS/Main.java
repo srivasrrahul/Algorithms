@@ -122,6 +122,12 @@ public class Main {
 
 
     }
+
+    public String performLcs(String x1,String x2) {
+        Cache cache = new Cache();
+        return lcs(x1,x2,0,0,cache);
+    }
+
     void readFile(String fileName) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));

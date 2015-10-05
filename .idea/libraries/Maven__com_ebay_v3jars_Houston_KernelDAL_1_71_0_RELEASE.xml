@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.ebay.v3jars.Houston:KernelDAL:1.71.0-RELEASE">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ebay/v3jars/Houston/KernelDAL/1.71.0-RELEASE/KernelDAL-1.71.0-RELEASE.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ebay/v3jars/Houston/KernelDAL/1.71.0-RELEASE/KernelDAL-1.71.0-RELEASE-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ebay/v3jars/Houston/KernelDAL/1.71.0-RELEASE/KernelDAL-1.71.0-RELEASE-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

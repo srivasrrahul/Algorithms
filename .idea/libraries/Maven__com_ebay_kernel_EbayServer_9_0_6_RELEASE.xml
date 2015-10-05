@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.ebay.kernel:EbayServer:9.0.6-RELEASE">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ebay/kernel/EbayServer/9.0.6-RELEASE/EbayServer-9.0.6-RELEASE.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ebay/kernel/EbayServer/9.0.6-RELEASE/EbayServer-9.0.6-RELEASE-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ebay/kernel/EbayServer/9.0.6-RELEASE/EbayServer-9.0.6-RELEASE-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

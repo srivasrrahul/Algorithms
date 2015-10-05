@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.ebayopensource.ginger:service-core:2.0.4-RELEASE">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/ebayopensource/ginger/service-core/2.0.4-RELEASE/service-core-2.0.4-RELEASE.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/ebayopensource/ginger/service-core/2.0.4-RELEASE/service-core-2.0.4-RELEASE-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/ebayopensource/ginger/service-core/2.0.4-RELEASE/service-core-2.0.4-RELEASE-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

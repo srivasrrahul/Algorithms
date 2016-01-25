@@ -47,7 +47,7 @@ public class UnionFind {
 
     }
 
-    void union(int p,int q) {
+    public void union(int p,int q) {
         union_tree(p, q);
 
     }
@@ -85,7 +85,7 @@ public class UnionFind {
         return p;
     }
 
-    boolean connected(int p,int q) {
+    public boolean connected(int p,int q) {
         return find(p) == find(q);
     }
 

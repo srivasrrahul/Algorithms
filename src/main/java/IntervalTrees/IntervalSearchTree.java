@@ -1,5 +1,7 @@
 package IntervalTrees;
 
+import GeometricAlgo.IntervalSingleDimension;
+
 /**
  * Created by Rahul on 3/7/16.
  */
@@ -68,7 +70,7 @@ class Node {
         }
     }
 }
-public class Tree {
+public class IntervalSearchTree {
     private Node root;
     static Node addIntervalIntenal(Node node,int low,int high) {
         if (low > node.getLow()) {
@@ -105,7 +107,36 @@ public class Tree {
         }
     }
 
-    void intersects(int low,int high) {
 
+    IntervalSingleDimension intersects(int low,int high) {
+        if (root == null) {
+            return null;
+        }
+
+        IntervalSingleDimension askedInterval = new IntervalSingleDimension(low,high);
+        Node current = root;
+        while (current != null) {
+            IntervalSingleDimension intervalSingleDimension = new IntervalSingleDimension(current.getLow(),
+                    current.getHigh());
+            if (intervalSingleDimension.intersects(askedInterval)) {
+                return intervalSingleDimension;
+            }
+
+            if (current.leftExists()) {
+                if (current.getLeft().getMaxEndPoint() < askedInterval.getLow()) {
+                    current = current.getRight();
+                }else {
+                    current = current.getLeft();
+                }
+            }else {
+                current = current.getRight();
+            }
+        }
+
+        return null;
+    }
+
+    public static void main(String[] args) {
+        Tre
     }
 }

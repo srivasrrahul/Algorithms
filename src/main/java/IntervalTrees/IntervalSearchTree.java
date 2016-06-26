@@ -2,6 +2,8 @@ package IntervalTrees;
 
 import GeometricAlgo.IntervalSingleDimension;
 
+import java.util.Stack;
+
 /**
  * Created by Rahul on 3/7/16.
  */
@@ -68,6 +70,29 @@ class Node {
         if (maxEndPoint < newNode.getMaxEndPoint()) {
             maxEndPoint = newNode.getMaxEndPoint();
         }
+    }
+    int countChildren() {
+        int count = 0;
+        if (leftExists()) {
+            ++count;
+        }
+
+        if (isRightExists()) {
+            ++count;
+        }
+
+        return count;
+    }
+
+    static void swapContents(Node source,Node dest) {
+        int lowTemp = source.getLow();
+        int rightTemp = source.getHigh();
+        source.low = dest.low;
+        source.high = dest.high;
+
+        dest.low = lowTemp;
+        dest.high = rightTemp;
+
     }
 }
 public class IntervalSearchTree {
@@ -136,7 +161,160 @@ public class IntervalSearchTree {
         return null;
     }
 
+    static Node findSmallest(Node currentNode) {
+        if (currentNode == null) {
+            return null;
+        }
+
+        if (currentNode.leftExists() == false) {
+            return currentNode;
+        }
+
+        return findSmallest(currentNode.getLeft());
+
+
+    }
+
+    static Node findSuccessor(Node currentNode) {
+        if (currentNode == null) {
+            return null;
+        }
+
+        if (currentNode.isRightExists()) {
+            return findSmallest(currentNode.getLeft());
+        }
+
+        return null;
+    }
+
+    static void deleteNode(Node parentNode,Node currentNode) {
+        if (currentNode == null) {
+            return;
+        }
+
+        //Current one is leaf
+        if (currentNode.isLeaf()) {
+            if (currentNode == parentNode.getLeft()) {
+                parentNode.setLeft(null);
+                parentNode.setMaxEndPoint(parentNode.getMaxEndPoint());
+                return;
+            }else {
+                parentNode.setRight(null);
+                parentNode.setMaxEndPoint(parentNode.getMaxEndPoint());
+                return;
+            }
+        }
+
+        int leafs = currentNode.countChildren();
+        //only one next
+        if (leafs == 1) {
+            Node next = (currentNode.leftExists()?currentNode.getLeft():currentNode.getRight());
+            if (currentNode == parentNode.getLeft()) {
+                parentNode.setLeft(next);
+                parentNode.setMaxEndPoint(parentNode.getMaxEndPoint());
+                return;
+            }else {
+                parentNode.setRight(next);
+                parentNode.setMaxEndPoint(parentNode.getMaxEndPoint());
+                return;
+            }
+
+        }
+
+//        //two next
+//        Node successor = findSuccessor(currentNode);
+//        Node.swapContents(currentNode,successor);
+
+        Node succ = currentNode.getRight();
+        Node succParent = currentNode;
+        Stack<Node> nodeStack = new Stack<>();
+        nodeStack.add(succParent);
+        while (succ.leftExists()) {
+
+            succParent = succ;
+            succ = succ.getLeft();
+            nodeStack.add(succParent);
+        }
+
+        Node.swapContents(currentNode,succ);
+        deleteNode(succParent,succ);
+        while (!nodeStack.empty()) {
+            Node node = nodeStack.pop();
+            int maxEndpoint = getMaxEndpoint(node);
+            node.setMaxEndPoint(maxEndpoint);
+        }
+
+
+    }
+
+    static void deleteRoot(Node root,Node currentNode) {
+        if (currentNode == null) {
+            return;
+        }
+
+        //Current one is leaf
+        if (currentNode.isLeaf()) {
+            root = null;
+        }
+
+        int leafs = currentNode.countChildren();
+        //only one next
+        if (leafs == 1) {
+            Node next = (currentNode.leftExists()?currentNode.getLeft():currentNode.getRight());
+            root = next;
+
+        }
+
+//        //two next
+//        Node successor = findSuccessor(currentNode);
+//        Node.swapContents(currentNode,successor);
+
+        Node succ = currentNode.getRight();
+        Node succParent = currentNode;
+        Stack<Node> nodeStack = new Stack<>();
+        nodeStack.add(succParent);
+        while (succ.leftExists()) {
+
+            succParent = succ;
+            succ = succ.getLeft();
+            nodeStack.add(succParent);
+        }
+
+        Node.swapContents(currentNode,succ);
+        deleteNode(succParent,succ);
+        while (!nodeStack.empty()) {
+            Node node = nodeStack.pop();
+            int maxEndpoint = getMaxEndpoint(node);
+            node.setMaxEndPoint(maxEndpoint);
+        }
+
+
+    }
+
+    private static int getMaxEndpoint(Node node) {
+        int maxEndPoint = node.getHigh();
+        if (node.getLeft() != null) {
+            if (maxEndPoint < node.getLeft().getMaxEndPoint()) {
+                maxEndPoint = node.getLeft().getMaxEndPoint();
+            }
+        }
+
+        if (node.getRight() != null) {
+            if (maxEndPoint < node.getRight().getMaxEndPoint()) {
+                maxEndPoint = node.getRight().getMaxEndPoint();
+            }
+        }
+
+        return maxEndPoint;
+    }
+
     public static void main(String[] args) {
-        Tre
+        IntervalSearchTree intervalSearchTree = new IntervalSearchTree();
+        intervalSearchTree.addInterval(10,16);
+        intervalSearchTree.addInterval(17,30);
+        intervalSearchTree.addInterval(9,13);
+        intervalSearchTree.addInterval(5,10);
+        intervalSearchTree.addInterval(14, 17);
+        System.out.println(intervalSearchTree.intersects(2,6));
     }
 }

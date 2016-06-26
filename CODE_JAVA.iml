@@ -109,6 +109,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="scala-sdk-2.11.7 (3)" level="application" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">
     <option name="_basePreferences">

@@ -39,7 +39,7 @@ class Point {
                 '}';
     }
 }
-public class Triangle {
+public class TestClass {
     static double ccw(Point a ,Point b,Point c) {
         double val = (b.getX()-a.getX())*(c.getY()-a.getY())-(b.getY()-a.getY())*(c.getX()-a.getX());
         return val;
@@ -93,7 +93,7 @@ public class Triangle {
 
     public static void main(String args[]) {
 
-        Triangle m = new Triangle();
+        TestClass m = new TestClass();
         m.readFile(null);
     }
 }

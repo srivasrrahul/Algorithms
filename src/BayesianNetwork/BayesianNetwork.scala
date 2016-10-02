@@ -1,6 +1,7 @@
 package BayesianNetwork
 
 import scala.collection.mutable
+import scala.collection.immutable
 
 
 /**
@@ -121,13 +122,85 @@ class BayesianNetworkProbabilityCalculator(val bayesianNetwork: BayesianNetwork)
 
   }
 
+  def getUnspecifiedEventName(eventNames : Set[String]) : Set[String] = {
+    val totalSet = new mutable.HashSet[String]()
+    bayesianNetwork.nodeLst.foreach(node => {
+      totalSet.+=(node.id)
+    })
+
+    val missingEvents = totalSet.toSet.diff(eventNames)
+    missingEvents
+  }
+
+  def allPermutations(events : Set[String]) : Set[Map[String,Int]] = {
+    def allPermutationsItr(lst : List[String]) : Set[Map[String,Int]] = {
+      println(" inside lst ")
+      lst match {
+        case x :: List() => {
+
+          val retValue = new mutable.HashSet[Map[String,Int]]()
+          val updatedMapWithFalse = new mutable.HashMap[String,Int]()
+          updatedMapWithFalse.+=((x,0))
+          retValue.+=(updatedMapWithFalse.toMap)
+          val updatedMapWithTrue = new mutable.HashMap[String,Int]()
+          updatedMapWithTrue.+=((x,1))
+          retValue.+=(updatedMapWithTrue.toMap)
+          retValue.toSet
+        }
+        case x :: xs => {
+          println(x)
+          val pendingOnes = allPermutationsItr(xs)
+          val retValue = new mutable.HashSet[Map[String,Int]]()
+          pendingOnes.foreach(m => {
+            val updatedMapWithFalse = m.+((x,0))
+            retValue.+=(updatedMapWithFalse)
+            val updatedMapWithTrue = m.+((x,1))
+            retValue.+=(updatedMapWithTrue)
+          })
+
+          retValue.toSet
+        }
+
+      }
+    }
+
+    allPermutationsItr(events.toList)
+  }
+  def getTotalEvents(specifiedEvents : Map[String,Int],unspecifiedEvents : Set[String]) : Set[Map[String,Int]] = {
+    val pendingEventsCombo = allPermutations(unspecifiedEvents)
+    println("All permutations " + pendingEventsCombo)
+    val retValue = new mutable.HashSet[Map[String,Int]]()
+    pendingEventsCombo.foreach(m => {
+      val m1 =     mergeMaps(specifiedEvents,m)
+      println("For event " + m1)
+      retValue.+=((m1))
+    })
+
+    retValue.toSet
+  }
+  def evalDist(event : Map[String,Int]) : Double = {
+    val diffSet = getUnspecifiedEventName(event.keySet)
+    println("DfiffSet is " + diffSet)
+    val totalEventSet = getTotalEvents(event,diffSet)
+    var totalPr = 0.0
+    println("Total event set is " + totalEventSet)
+    totalEventSet.foreach(e => {
+
+      val processedProbability =  getProbabilityOfBayesianNetwork(e)
+      println("processing event " + e + " ==> " + processedProbability)
+      totalPr = totalPr + processedProbability
+    })
+
+    totalPr
+  }
+
   def evaluate(posterior : Map[String,Int],evidence : Map[String,Int]) : Double = {
     println(" Posterior " + posterior  + " Evidence " + evidence)
-    val evidenceProb = getProbabilityOfBayesianNetwork(evidence)
+    val evidenceProb = evalDist(evidence)
     println("Evidence Probability " + evidenceProb)
 
     println("merged Valyes " + mergeMaps(evidence,posterior))
-    val totalProb = getProbabilityOfBayesianNetwork(mergeMaps(evidence,posterior))
+    val totalProb = evalDist(mergeMaps(evidence,posterior))
     println("Total Probability " + totalProb)
 
     totalProb/evidenceProb
@@ -210,7 +283,7 @@ object BayesianNetworkTest extends App {
   grassWetMatrix(7)(3) = 0.99
 
   val grassWetNode =
-    new BayesianNode("GrassWet",new ConditionalProbability("GrassWet",Array[String]("Srinkler","Rain"),grassWetMatrix))
+    new BayesianNode("GrassWet",new ConditionalProbability("GrassWet",Array[String]("Sprinkler","Rain"),grassWetMatrix))
 
 
   rainNode.addOutgoingNodes(sprinklerNode)
@@ -230,6 +303,9 @@ object BayesianNetworkTest extends App {
   posterior.+=(("Rain",1))
 
   println(bayesianNetworkProbabilityCal.evaluate(posterior.toMap,evidence.toMap))
+  //val l = bayesianNetworkProbabilityCal.getUnspecifiedEventName(Set("Rain"))
+  //println("Unspecified one " + l)
+  //println("All permutations " + bayesianNetworkProbabilityCal.allPermutations(l))
 
   //println(bayesianNetworkProbabilityCal.getProbabilityOfBayesianNetwork(eventsOfInterest.toMap))
 

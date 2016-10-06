@@ -29,16 +29,16 @@ class ConditionalProbability(val posterior : String,val evidence : Array[String]
 
   //if defined present with value
   def matchRow(arr : Array[Double],possibleValues: mutable.HashMap[Int,Int]): Boolean = {
-    println("String " + arr.deep.mkString(","))
-    println("Possible Value " + possibleValues)
+    //println("String " + arr.deep.mkString(","))
+    //println("Possible Value " + possibleValues)
     var matched = true
     breakable {
       for (j <- 0 to arr.length - 2) {
         //println("In loop " + j)
         if (possibleValues.contains(j) && possibleValues.get(j).get != -1) {
-          println("In loop  " + j + " " + possibleValues.get(j).get + " " + arr(j))
+          //println("In loop  " + j + " " + possibleValues.get(j).get + " " + arr(j))
           if (possibleValues.get(j).get != arr(j)) {
-            println("Break it")
+            //println("Break it")
             matched = false
             break()
           }

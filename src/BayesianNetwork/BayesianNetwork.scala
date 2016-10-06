@@ -73,7 +73,7 @@ class BayesianNetworkProbabilityCalculator(val bayesianNetwork: BayesianNetwork)
       println("Calculating for " + bayesianNodeItr.head.id)
       bayesianNodeItr match {
         case node :: List() => {
-          println("Last Node Here" + node.id + " " + node.conditionalProbability.toString)
+          println("Last Node  " + node.id + " " + node.conditionalProbability.toString)
           val condProb = node.conditionalProbability
           val matchPr = condProb.getProbability(passedValues)
           println("Last Node " + node.id + " resulted in " + " probability of " + matchPr)

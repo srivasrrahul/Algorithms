@@ -66,6 +66,13 @@ class ShortestPathEdgeWeighted(val graph: EdgeWeightedDirectedGraph,val source :
 
 }
 
+class AllPairsShortestPathUsingDikstra(val graph: EdgeWeightedDirectedGraph) {
+  val shortestPathFromAllVertices = new Array[ShortestPathEdgeWeighted](graph.verticesCount)
+  for (i<-0 to shortestPathFromAllVertices.length-1) {
+    shortestPathFromAllVertices(i) = new ShortestPathEdgeWeighted(graph,i)
+  }
+}
+
 object DijkistraTest extends App {
   val fileName = "/Users/rasrivastava/CODE_OPEN/SAMPLE_FILES/tinyEWD.txt"
   val sourceStream = Source.fromFile(fileName).getLines()

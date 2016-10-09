@@ -1,5 +1,6 @@
 package ScalaSolutions.GraphProblems
 
+import scala.StringBuilder
 import scala.collection.mutable
 import scala.io.Source
 
@@ -17,6 +18,16 @@ class EdgeWeightedNode(val id : Int) {
   }
 
   val edges = new mutable.HashSet[DirectedEdge]()
+
+  override def toString: String = {
+    val str = new StringBuilder
+    str.append(id + " => ")
+    edges.foreach(edge => {
+      str.append(edge.toString + ",")
+    })
+
+    str.toString()
+  }
 }
 class EdgeWeightedDirectedGraph(val verticesCount : Int) {
   val vertexArr = new Array[EdgeWeightedNode](verticesCount)
@@ -38,6 +49,15 @@ class EdgeWeightedDirectedGraph(val verticesCount : Int) {
     edges.toSet
   }
 
+  override def toString: String = {
+    val strBuilder = new StringBuilder()
+    for (i <- 0 to vertexArr.length-1) {
+      strBuilder.append(vertexArr(i).toString + ",")
+      strBuilder.append("\n")
+    }
+
+    strBuilder.toString()
+  }
 }
 
 object EdgeWeightedDirectedGraphTest extends App {

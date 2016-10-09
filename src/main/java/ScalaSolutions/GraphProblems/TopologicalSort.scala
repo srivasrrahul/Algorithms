@@ -3,6 +3,7 @@ package ScalaSolutions.GraphProblems
 import java.util
 
 import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 
 /**
@@ -124,5 +125,72 @@ class TopologicalSort(val graph : DirectedGraph) {
 
     resultIndex
 
+  }
+}
+
+
+class TopologicalSortEdgeWeightedDirectedGraph(val graph : EdgeWeightedDirectedGraph) {
+  //println("Here")
+  val indegrees = fillInDegrees()
+  val nodesWithDegreeZero = new mutable.Queue[Int]()
+  val longestPath = new mutable.HashMap[Int,Double]()
+
+  //val topologicalSortedOrder = new util.LinkedList[Int]()
+
+  val topologicalSortedOrderLst = new ListBuffer[Int]
+  for (i <- 0 to indegrees.length-1) {
+    longestPath.+=((i,0))
+    if (indegrees(i) == 0) {
+      nodesWithDegreeZero.enqueue(i)
+
+    }
+
+  }
+
+
+
+  //println("Here 1 " +nodesWithDegreeZero.length)
+  while (nodesWithDegreeZero.length > 0) {
+
+    val lastNode = nodesWithDegreeZero.dequeue()
+    //println(lastNode)
+    //topologicalSortedOrder.add(lastNode)
+    topologicalSortedOrderLst += lastNode
+    val neighbours = graph.vertexArr(lastNode).getEdges()
+    neighbours.foreach(edge => {
+      val dest = edge.dest
+      indegrees(dest) = indegrees(dest) - 1
+      if (longestPath(dest) < longestPath(edge.source) + edge.weight) {
+        longestPath(dest) = longestPath(edge.source) + edge.weight
+      }
+
+      if (indegrees(dest) == 0) {
+        nodesWithDegreeZero.enqueue(dest)
+
+      }
+    })
+  }
+
+
+  def getSortedOrder() : List[Int] = {
+    topologicalSortedOrderLst.toList
+  }
+
+  def getLongestPaths() : Map[Int,Double] = {
+    longestPath.toMap
+  }
+
+
+  def fillInDegrees() : Array[Int] = {
+    val inDegreeData = new Array[Int](graph.verticesCount)
+    graph.vertexArr.foreach(node => {
+      node.getEdges().foreach(edge => {
+        //println("In defree")
+        inDegreeData(edge.dest) = inDegreeData(edge.dest)+1
+      })
+    })
+
+
+    inDegreeData
   }
 }
